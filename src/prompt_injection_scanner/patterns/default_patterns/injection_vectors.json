@@ -1,0 +1,82 @@
+{
+  "name": "injection_vectors",
+  "version": "1.0.0",
+  "description": "Common injection vectors and manipulation techniques",
+  "author": "prompt-injection-scanner",
+  "created_at": "2024-01-01T00:00:00Z",
+  "patterns": [
+    {
+      "id": "delimiter_injection",
+      "name": "Delimiter Injection",
+      "description": "Attempts to inject markup delimiters or tags",
+      "pattern": "(\\[\\/?\\w+\\]|<\\/?\\w+>|\\{\\/?\\w+\\})",
+      "pattern_type": "regex",
+      "severity": "medium",
+      "category": "input_manipulation",
+      "risk_score": 25,
+      "enabled": true,
+      "case_sensitive": false,
+      "tags": ["delimiter", "markup", "injection"],
+      "examples": [
+        "[/INST]", 
+        "<system>", 
+        "{admin}",
+        "[ASSISTANT]"
+      ]
+    },
+    {
+      "id": "prompt_injection_keywords",
+      "name": "Prompt Injection Keywords",
+      "description": "Common keywords used in prompt injection attempts",
+      "pattern": "(prompt\\s+injection|adversarial\\s+prompt|hijack|manipulate\\s+ai)",
+      "pattern_type": "regex",
+      "severity": "medium",
+      "category": "meta_attack",
+      "risk_score": 20,
+      "enabled": true,
+      "case_sensitive": false,
+      "tags": ["meta", "injection", "adversarial"],
+      "examples": [
+        "this is a prompt injection attack",
+        "adversarial prompt example",
+        "attempt to hijack the conversation"
+      ]
+    },
+    {
+      "id": "context_switching",
+      "name": "Context Switching",
+      "description": "Attempts to switch conversation context or mode",
+      "pattern": "(new\\s+context|switch\\s+mode|different\\s+persona|alternate\\s+personality)",
+      "pattern_type": "regex",
+      "severity": "low",
+      "category": "context_manipulation",
+      "risk_score": 15,
+      "enabled": true,
+      "case_sensitive": false,
+      "tags": ["context", "mode", "switching"],
+      "examples": [
+        "switch to a different mode",
+        "new context: you are now",
+        "alternate personality activation"
+      ]
+    },
+    {
+      "id": "encoding_attempts",
+      "name": "Encoding Attempts",
+      "description": "Attempts to use encoding to bypass filters",
+      "pattern": "(base64|rot13|hex\\s+encoded|url\\s+encoded|unicode)",
+      "pattern_type": "regex",
+      "severity": "medium",
+      "category": "evasion",
+      "risk_score": 30,
+      "enabled": true,
+      "case_sensitive": false,
+      "tags": ["encoding", "evasion", "bypass"],
+      "examples": [
+        "decode this base64 string",
+        "rot13 encoded message",
+        "hex encoded instruction"
+      ]
+    }
+  ]
+}

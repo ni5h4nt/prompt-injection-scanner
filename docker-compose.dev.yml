@@ -1,0 +1,27 @@
+version: '3.8'
+
+# Development overrides
+services:
+  scanner:
+    build:
+      context: .
+      target: development
+    volumes:
+      - .:/app
+      - /app/.venv  # Exclude venv from mount
+    environment:
+      - DEBUG=true
+      - LOG_LEVEL=DEBUG
+      - HOST=0.0.0.0
+      - PORT=8000
+      - VECTOR_DB_ENABLED=true
+      - VECTOR_DB_TYPE=chromadb
+      - VECTOR_DB_URL=http://chromadb:8001
+      - REDIS_URL=redis://redis:6379/0
+    command: ["python", "-m", "prompt_injection_scanner.cli", "serve"]
+    ports:
+      - "8000:8000"
+      - "8001:8001"  # For debugging
+    
+  # Development-specific services can be added here
+  # For example, a development database with test data
