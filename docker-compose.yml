@@ -1,103 +1,211 @@
+# Complete Docker Compose for Prompt Injection Scanner
+# Single file for all services needed for local development and production
+
 version: '3.8'
 
 services:
-  # Main scanner service
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: scanner-postgres
+    environment:
+      POSTGRES_DB: scanner
+      POSTGRES_USER: scanner_user
+      POSTGRES_PASSWORD: scanner_password
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U scanner_user -d scanner"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - scanner-network
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: scanner-redis
+    command: redis-server --appendonly yes --requirepass redis_password
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli --no-auth-warning -a redis_password ping | grep PONG"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    networks:
+      - scanner-network
+
+  # Etcd for Milvus metadata
+  etcd:
+    image: quay.io/coreos/etcd:v3.5.9
+    container_name: scanner-etcd
+    environment:
+      - ETCD_AUTO_COMPACTION_MODE=revision
+      - ETCD_AUTO_COMPACTION_RETENTION=1000
+      - ETCD_QUOTA_BACKEND_BYTES=4294967296
+      - ETCD_SNAPSHOT_COUNT=50000
+    volumes:
+      - etcd_data:/etcd
+    command: etcd -advertise-client-urls=http://127.0.0.1:2379 -listen-client-urls http://0.0.0.0:2379 --data-dir /etcd
+    healthcheck:
+      test: ["CMD-SHELL", "ETCDCTL_API=3 etcdctl --endpoints=http://localhost:2379 endpoint health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - scanner-network
+
+  # MinIO Object Storage for Milvus
+  minio:
+    image: minio/minio:latest
+    container_name: scanner-minio
+    environment:
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+    ports:
+      - "9003:9000"
+      - "9002:9001"
+    volumes:
+      - minio_data:/data
+    command: minio server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - scanner-network
+
+  # Milvus Vector Database
+  milvus:
+    image: milvusdb/milvus:latest
+    container_name: scanner-milvus
+    command: ["milvus", "run", "standalone"]
+    environment:
+      ETCD_ENDPOINTS: etcd:2379
+      MINIO_ADDRESS: minio:9000  # Internal container port
+    volumes:
+      - milvus_data:/var/lib/milvus
+    ports:
+      - "19530:19530"
+      - "9091:9091"
+    depends_on:
+      etcd:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9091/healthz || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 90s
+    restart: unless-stopped
+    networks:
+      - scanner-network
+
+  # Main Scanner Application
   scanner:
     build:
       context: .
-      target: production
-    ports:
-      - "8000:8000"
+      dockerfile: Dockerfile
+    container_name: scanner-app
     environment:
-      - HOST=0.0.0.0
-      - PORT=8000
+      - ENV=development
+      - DATABASE_URL=postgresql://scanner_user:scanner_password@postgres:5432/scanner
+      - REDIS_URL=redis://:redis_password@redis:6379/0
+      - VECTOR_DB_TYPE=milvus
+      - VECTOR_DB_URL=milvus:19530
+      - GUARDIAN_MODEL=openai:gpt-4
       - LOG_LEVEL=INFO
-      - VECTOR_DB_ENABLED=true
-      - VECTOR_DB_TYPE=chromadb
-      - VECTOR_DB_URL=http://chromadb:8001
-      - REDIS_URL=redis://redis:6379/0
+      - PORT=9987
+    ports:
+      - "9987:9987"
+    volumes:
+      - ./src:/app/src:ro
+      - ./config:/app/config:ro
     depends_on:
-      - chromadb
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      milvus:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - scanner-network
+
+  # Database Administration UI
+  adminer:
+    image: adminer:latest
+    container_name: scanner-adminer
+    ports:
+      - "8080:8080"
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    networks:
+      - scanner-network
+
+  # Redis Management UI
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: scanner-redis-commander
+    environment:
+      REDIS_HOSTS: local:redis:6379:0:redis_password
+    ports:
+      - "8081:8081"
+    depends_on:
       - redis
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
     restart: unless-stopped
+    networks:
+      - scanner-network
 
-  # ChromaDB vector database  
-  chromadb:
-    image: chromadb/chroma:latest
-    ports:
-      - "8001:8000"
-    environment:
-      - CHROMA_SERVER_HOST=0.0.0.0
-      - CHROMA_SERVER_HTTP_PORT=8000
-    volumes:
-      - chromadb_data:/chroma/chroma
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    restart: unless-stopped
-
-  # Redis for caching
-  redis:
-    image: redis:7-alpine
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-    command: redis-server --appendonly yes
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    restart: unless-stopped
-
-  # PostgreSQL for persistent storage (optional)
-  postgres:
-    image: postgres:15-alpine
-    ports:
-      - "5432:5432"
-    environment:
-      - POSTGRES_DB=scanner
-      - POSTGRES_USER=scanner
-      - POSTGRES_PASSWORD=scanner_password
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U scanner"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    restart: unless-stopped
-
-  # Nginx reverse proxy (optional)
+  # Nginx Reverse Proxy (Optional - for production)
   nginx:
     image: nginx:alpine
+    container_name: scanner-nginx
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - ./docker/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./docker/ssl:/etc/nginx/ssl:ro
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/ssl:ro
     depends_on:
       - scanner
     restart: unless-stopped
+    networks:
+      - scanner-network
+    profiles:
+      - production
 
 volumes:
-  chromadb_data:
+  postgres_data:
     driver: local
   redis_data:
     driver: local
-  postgres_data:
+  etcd_data:
+    driver: local
+  minio_data:
+    driver: local
+  milvus_data:
     driver: local
 
 networks:
-  default:
+  scanner-network:
     driver: bridge
+    name: scanner-network
