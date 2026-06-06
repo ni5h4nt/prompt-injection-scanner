@@ -1,0 +1,206 @@
+name: benign_training_examples
+version: 1.0.0
+description: Training examples for benign category
+category: benign
+total_examples: 40
+examples:
+- text: What's the weather like today?
+  label: benign
+  severity: low
+  confidence: 0.95
+  source: manual_curation
+- text: Can you help me write a professional email?
+  label: benign
+  severity: low
+  confidence: 0.95
+  source: manual_curation
+- text: Explain machine learning in simple terms
+  label: benign
+  severity: low
+  confidence: 0.95
+  source: manual_curation
+- text: What are some good recipes for dinner tonight?
+  label: benign
+  severity: low
+  confidence: 0.95
+  source: manual_curation
+- text: How do I learn a new programming language?
+  label: benign
+  severity: low
+  confidence: 0.95
+  source: manual_curation
+- text: Can you summarize this article for me?
+  label: benign
+  severity: low
+  confidence: 0.95
+  source: manual_curation
+- text: What are the benefits of regular exercise?
+  label: benign
+  severity: low
+  confidence: 0.95
+  source: manual_curation
+- text: Help me plan a vacation to Japan
+  label: benign
+  severity: low
+  confidence: 0.95
+  source: manual_curation
+- text: Explain the history of the Roman Empire
+  label: benign
+  severity: low
+  confidence: 0.95
+  source: manual_curation
+- text: What are some effective study techniques?
+  label: benign
+  severity: low
+  confidence: 0.95
+  source: manual_curation
+- text: How do solar panels work?
+  label: benign
+  severity: low
+  confidence: 0.95
+  source: manual_curation
+- text: Can you help me debug this code?
+  label: benign
+  severity: low
+  confidence: 0.95
+  source: manual_curation
+- text: What are some good books to read this summer?
+  label: benign
+  severity: low
+  confidence: 0.95
+  source: manual_curation
+- text: Explain the basics of investing in stocks
+  label: benign
+  severity: low
+  confidence: 0.95
+  source: manual_curation
+- text: How do I improve my public speaking skills?
+  label: benign
+  severity: low
+  confidence: 0.95
+  source: manual_curation
+- text: What are the symptoms of the common cold?
+  label: benign
+  severity: low
+  confidence: 0.95
+  source: manual_curation
+- text: Help me understand quantum physics concepts
+  label: benign
+  severity: low
+  confidence: 0.95
+  source: manual_curation
+- text: What are some healthy meal prep ideas?
+  label: benign
+  severity: low
+  confidence: 0.95
+  source: manual_curation
+- text: How do I start a small business?
+  label: benign
+  severity: low
+  confidence: 0.95
+  source: manual_curation
+- text: Explain the difference between AI and machine learning
+  label: benign
+  severity: low
+  confidence: 0.95
+  source: manual_curation
+- text: What are some effective time management strategies?
+  label: benign
+  severity: low
+  confidence: 0.95
+  source: manual_curation
+- text: How do I write a compelling cover letter?
+  label: benign
+  severity: low
+  confidence: 0.95
+  source: manual_curation
+- text: What are the principles of good design?
+  label: benign
+  severity: low
+  confidence: 0.95
+  source: manual_curation
+- text: Help me understand climate change science
+  label: benign
+  severity: low
+  confidence: 0.95
+  source: manual_curation
+- text: What are some meditation techniques for beginners?
+  label: benign
+  severity: low
+  confidence: 0.95
+  source: manual_curation
+- text: How do I improve my photography skills?
+  label: benign
+  severity: low
+  confidence: 0.95
+  source: manual_curation
+- text: What are the basics of personal finance?
+  label: benign
+  severity: low
+  confidence: 0.95
+  source: manual_curation
+- text: Explain how the internet works
+  label: benign
+  severity: low
+  confidence: 0.95
+  source: manual_curation
+- text: What are some creative writing tips?
+  label: benign
+  severity: low
+  confidence: 0.95
+  source: manual_curation
+- text: How do I maintain a healthy work-life balance?
+  label: benign
+  severity: low
+  confidence: 0.95
+  source: manual_curation
+- text: What are the fundamentals of music theory?
+  label: benign
+  severity: low
+  confidence: 0.95
+  source: manual_curation
+- text: Help me understand different cultures around the world
+  label: benign
+  severity: low
+  confidence: 0.95
+  source: manual_curation
+- text: What are some effective leadership qualities?
+  label: benign
+  severity: low
+  confidence: 0.95
+  source: manual_curation
+- text: How do I grow a vegetable garden?
+  label: benign
+  severity: low
+  confidence: 0.95
+  source: manual_curation
+- text: Explain the concept of emotional intelligence
+  label: benign
+  severity: low
+  confidence: 0.95
+  source: manual_curation
+- text: What are some good habits for mental health?
+  label: benign
+  severity: low
+  confidence: 0.95
+  source: manual_curation
+- text: How do I improve my communication skills?
+  label: benign
+  severity: low
+  confidence: 0.95
+  source: manual_curation
+- text: What are the basics of nutrition and diet?
+  label: benign
+  severity: low
+  confidence: 0.95
+  source: manual_curation
+- text: Help me understand different art movements
+  label: benign
+  severity: low
+  confidence: 0.95
+  source: manual_curation
+- text: What are some tips for learning a new language?
+  label: benign
+  severity: low
+  confidence: 0.95
+  source: manual_curation
