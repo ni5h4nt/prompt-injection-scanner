@@ -53,10 +53,10 @@ For background, see the [OWASP Top 10 for LLM Applications](https://owasp.org/ww
 ```mermaid
 graph LR
     A[API Request] --> B[Stage 1: Heuristic Filter]
-    B --> C{Risk > 60?}
+    B --> C{"Risk > 60?"}
     C -->|Yes| H[Early Exit]
     C -->|No| D[Stage 2: Vector Similarity]
-    D --> E{Risk > 80?}
+    D --> E{"Risk > 80?"}
     E -->|Yes| H
     E -->|No| F[Stage 3: Pydantic AI Guardian]
     F --> G[Risk Aggregation]
@@ -66,15 +66,15 @@ graph LR
     J --> K[Continuous Learning]
     K --> D
     
-    subgraph "Stage 1 Details"
+    subgraph s1 [Stage 1 Details]
         L[115+ Pattern Rules<br/>Regex Matching<br/>Risk Scoring: 0-40pts<br/>~2ms latency]
     end
-    
-    subgraph "Stage 2 Details"
-        M[all-MiniLM-L6-v2<br/>115+ Training Examples<br/>ChromaDB/Milvus/Memory<br/>Cosine Similarity > 0.75<br/>~25ms latency]
+
+    subgraph s2 [Stage 2 Details]
+        M["all-MiniLM-L6-v2<br/>115+ Training Examples<br/>ChromaDB/Milvus/Memory<br/>Cosine Similarity > 0.75<br/>~25ms latency"]
     end
-    
-    subgraph "Stage 3 Details"
+
+    subgraph s3 [Stage 3 Details]
         N[Pydantic AI Agents<br/>OpenAI/Anthropic/Gemini<br/>Structured Output<br/>Type-safe Analysis<br/>~200ms latency]
     end
     
