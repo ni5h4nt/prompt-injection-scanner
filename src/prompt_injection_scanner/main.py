@@ -9,6 +9,7 @@ from fastapi.responses import RedirectResponse
 
 from .api.swagger_config import custom_openapi_schema
 from .api.v1 import router as v1_router
+from .api.v1.router import get_scan_handler
 from .api.v1.handlers import ScanHandlerV1
 from .api.versioning import (
     VersionConfig,
@@ -168,7 +169,7 @@ def get_v1_handler() -> ScanHandlerV1:
 
 
 # Override the dependency in v1 router
-v1_router.dependency_overrides[v1_router.get_scan_handler] = get_v1_handler
+app.dependency_overrides[get_scan_handler] = get_v1_handler
 
 # Include versioned routers
 app.include_router(v1_router)
