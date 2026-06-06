@@ -1,0 +1,12 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Detection bypass / vulnerability report
+    url: https://github.com/ni5h4nt/prompt-injection-scanner/security/advisories/new
+    about: |
+      A prompt-injection payload the scanner classifies as benign, or a
+      vulnerability in the scanner itself, should be reported privately
+      via GitHub's security advisory flow — NOT a public issue. See
+      SECURITY.md for the full policy.
+  - name: Question / discussion
+    url: https://github.com/ni5h4nt/prompt-injection-scanner/discussions
+    about: For usage questions, architecture discussions, or anything that isn't a bug or feature request.

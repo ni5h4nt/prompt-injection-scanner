@@ -1,0 +1,42 @@
+name: False positive
+description: A benign prompt the scanner flags as malicious. Detection accuracy improvements are tracked publicly.
+labels: [false-positive, detection-accuracy]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Public report is fine** — false positives are NOT security-sensitive (the opposite — a *false negative* / bypass should go through the private [security advisory flow](https://github.com/ni5h4nt/prompt-injection-scanner/security/advisories/new)).
+  - type: textarea
+    id: prompt
+    attributes:
+      label: The benign prompt that was flagged
+      description: The exact text, in a code block. Redact PII first.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: response
+    attributes:
+      label: The scanner's response
+      description: Full JSON response from `/v1/scan` if you have it — `risk_score`, `flags`, `threat_types`, and per-stage scores are the most useful fields.
+      render: json
+    validations:
+      required: true
+  - type: dropdown
+    id: stage
+    attributes:
+      label: Which stage triggered the false positive?
+      options:
+        - "heuristic (Stage 1) — pattern/regex match"
+        - "vector similarity (Stage 2) — similarity to a known attack"
+        - "LLM guardian (Stage 3) — agent classified as malicious"
+        - "Not sure"
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Why it should be benign
+      description: What's the legitimate use case for this prompt? Helps us decide whether to add it to the benign training set.
+    validations:
+      required: true
