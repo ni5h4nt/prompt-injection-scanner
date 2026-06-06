@@ -1,0 +1,47 @@
+name: Bug report
+description: Report a defect in the scanner — something broken, crashing, or behaving incorrectly. NOT a detection bypass (use private security advisory for that).
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. Before filing, please:
+        - Confirm this is a *defect*, not a missed-detection / false-positive (those have their own templates).
+        - Search [existing issues](https://github.com/ni5h4nt/prompt-injection-scanner/issues?q=is%3Aissue) — if there's already one open, +1 there instead.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A clear, factual description of the bug.
+      placeholder: "When I do X, Y happens. I expected Z."
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction steps
+      description: Minimum steps to reproduce. Include the exact command, input, or API call.
+      placeholder: |
+        1. Start the stack: `docker compose up -d`
+        2. Send: `curl -X POST http://localhost:9987/v1/scan -d '{"prompt": "..."}'`
+        3. Observe: ...
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Version / commit SHA, Python version, OS, and which deployment path (docker, poetry, etc.).
+      placeholder: |
+        - Commit: e70a023
+        - Python: 3.12.3
+        - OS: Linux (WSL2)
+        - Stack: docker compose
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / traceback
+      description: Relevant log output or stack trace. Use a code block. **Do not paste real prompts containing PII or secrets** — redact them.
+      render: shell
