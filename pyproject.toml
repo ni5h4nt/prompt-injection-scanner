@@ -24,10 +24,10 @@ packages = [{include = "prompt_injection_scanner", from = "src"}]
 [tool.poetry.dependencies]
 python = "^3.10"
 # Core dependencies
-fastapi = "==0.115.14"
+fastapi = ">=0.136.0,<1.0.0"
 uvicorn = {extras = ["standard"], version = "==0.32.1"}
 pydantic = "==2.11.7"
-pydantic-ai = "==0.4.11"
+pydantic-ai = "^1.0"
 structlog = "==25.4.0"
 click = "==8.2.1"
 pyyaml = "==6.0.2"
