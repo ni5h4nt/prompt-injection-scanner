@@ -148,7 +148,7 @@ class MilvusClient(VectorDB):
         )
 
     @with_error_handling
-    @with_logging
+    @with_logging("milvus_search")
     async def search(
         self, embedding: List[float], limit: int = 5
     ) -> List[SearchResult]:
@@ -156,7 +156,7 @@ class MilvusClient(VectorDB):
         return await self.similarity_search(embedding, threshold=0.0, k=limit)
 
     @with_error_handling
-    @with_logging
+    @with_logging("milvus_similarity_search")
     async def similarity_search(
         self, embedding: List[float], threshold: float = 0.75, k: int = 5
     ) -> List[SearchResult]:
@@ -225,7 +225,7 @@ class MilvusClient(VectorDB):
         return results[:k]
 
     @with_error_handling
-    @with_logging
+    @with_logging("milvus_add")
     async def add(
         self, embedding: List[float], text: str, metadata: dict = None
     ) -> str:

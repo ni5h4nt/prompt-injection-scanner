@@ -148,24 +148,23 @@ curl -X POST http://localhost:9987/v1/scan \
 ### Local Development
 
 ```bash
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
 # Install with development dependencies
-pip install -e ".[dev]"
+poetry install --with dev
 
-# Install with ML/vector search support
-pip install -e ".[vector-similarity,vector-chromadb]"
+# Install with ML/vector search support  
+poetry install --extras "ml"
 
-# Install with Milvus vector database
-pip install -e ".[vector-similarity,vector-milvus]"
+# Install with specific vector database
+poetry install --extras "vector-similarity vector-milvus"
 
 # Install with all features
-pip install -e ".[all]"
+poetry install --extras "all"
 
-# Run the scanner
-scanner --help  # or python -m prompt_injection_scanner --help
+# Run the scanner (Poetry manages virtual environment automatically)
+poetry run scanner --help
+# or
+poetry shell  # activate Poetry's virtual environment
+scanner --help
 ```
 
 ## API Usage
