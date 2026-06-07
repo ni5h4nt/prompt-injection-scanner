@@ -38,7 +38,11 @@ torch = {version = "^2.0.0", optional = true}
 numpy = {version = "^1.24.0", optional = true}
 
 # Optional dependencies - Vector databases
-chromadb = {version = ">=0.5.0,<2.0.0", optional = true}
+# Capped <1.0.0: chromadb 1.0.0–1.5.9 carry CVE-2026-45829 (pre-auth code
+# injection, GHSA-f4j7-r4q5-qw2c) with no patched release. The 0.5/0.6 line
+# ships wheels (avoids the local Poetry sdist-build bug) and is outside the
+# vulnerable range. Lift the cap once chromadb publishes a patched 1.x.
+chromadb = {version = ">=0.5.0,<1.0.0", optional = true}
 pinecone-client = {version = "^3.0.0", optional = true}
 weaviate-client = {version = "^4.4.0", optional = true}
 pymilvus = {version = "^2.3.0", optional = true}
