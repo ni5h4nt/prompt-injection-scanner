@@ -26,19 +26,19 @@ python = "^3.10"
 # Core dependencies
 fastapi = ">=0.136.0,<1.0.0"
 uvicorn = {extras = ["standard"], version = ">=0.35,<1.0"}
-pydantic = "==2.11.7"
-pydantic-ai = "^1.0"
+pydantic = ">=2.12,<3.0"
+pydantic-ai = "^1.99"
 structlog = "==25.4.0"
 click = "==8.2.1"
 pyyaml = "==6.0.2"
 
 # Optional dependencies - Vector similarity
-sentence-transformers = {version = "^2.2.0", optional = true}
+sentence-transformers = {version = ">=2.3.0,<6.0.0", optional = true}
 torch = {version = "^2.0.0", optional = true}
 numpy = {version = "^1.24.0", optional = true}
 
 # Optional dependencies - Vector databases
-chromadb = {version = "^0.4.0", optional = true}
+chromadb = {version = ">=0.5.0,<2.0.0", optional = true}
 pinecone-client = {version = "^3.0.0", optional = true}
 weaviate-client = {version = "^4.4.0", optional = true}
 pymilvus = {version = "^2.3.0", optional = true}
